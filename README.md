@@ -31,7 +31,7 @@ We evaluate three stabilization schemes against naive inversion:
 
 3. **Physics-Informed Variational Inversion (Total Variation Prior):**
 
-   $$\min_{\hat{x}} \frac{1}{2N} \|A\hat{x} - y\|_2^2 + \lambda_{\text{TV}} \sum_{i=1}^{N-1} \sqrt{(\hat{x}_{i+1} - \hat{x}_i)^2 + \epsilon} \quad \text{subject to} \quad \hat{x} \in [0, 1]$$
+   $$ \min_{\hat{x}} \frac{1}{2N} || A\hat{x} - y ||_2^2 + \lambda_{\text{TV}} \sum_{i=1}^{N-1} \sqrt{(\hat{x}_{i+1} - \hat{x}_i)^2 + \epsilon} \quad \text{subject to} \quad \hat{x} \in [0, 1] $$
 
 | Solver Method | Relative $L_2$ Error | Notes |
 | :--- | :--- | :--- |
