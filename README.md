@@ -20,15 +20,17 @@ $$x_{\text{naive}} = A^\dagger y = \sum_{i=1}^N \frac{u_i^T y}{\sigma_i} v_i \im
 
 Resulting in a relative $L_2$ error exceeding $4 \times 10^{10}$.
 
-## Solvers & Benchmark Results
+### Solvers & Benchmark Results
 We evaluate three stabilization schemes against naive inversion:
 
 1. **0th-Order Tikhonov Regularization (Ridge Regression):**
    $$\min_x \|Ax - y\|_2^2 + \alpha \|x\|_2^2 \implies x = (A^T A + \alpha I)^{-1} A^T y$$
+
 2. **1st-Order Tikhonov Regularization (Gradient Damping):**
    $$\min_x \|Ax - y\|_2^2 + \alpha \|Dx\|_2^2 \implies x = (A^T A + \alpha D^T D)^{-1} A^T y$$
+
 3. **Physics-Informed Variational Inversion (Total Variation Prior):**
-   $$\min_x \frac{1}{2N} \|Ax - y\|_2^2 + \lambda_{\text{TV}} \sum_{i} \sqrt{(x_{i+1} - x_i)^2 + \epsilon}, \quad \text{s.t. } x \in [0, 1]$$
+   $$\min_{\hat{x}} \frac{1}{2N} \|A\hat{x} - y\|_2^2 + \lambda_{\text{TV}} \sum_{i=1}^{N-1} \sqrt{(\hat{x}_{i+1} - \hat{x}_i)^2 + \epsilon} \quad \text{s.t.} \quad \hat{x} \in [0, 1]$$
 
 | Solver Method | Relative $L_2$ Error | Notes |
 | :--- | :--- | :--- |
