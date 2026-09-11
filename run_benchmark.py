@@ -1,6 +1,7 @@
 """
 run_benchmark.py
 Executes the comparative inversion suite and reports benchmark metrics.
+Publication-grade visual configuration: zero grid clutter, flush origin (x=0).
 """
 
 import numpy as np
@@ -47,43 +48,66 @@ def main():
     err_tik_d1 = relative_l2_error(x_true, x_tik_d1)
     err_tv = relative_l2_error(x_true, x_tv)
     
-    print(f"[-] Relative L2 Error (Naive Inversion) : {err_naive:.4f}")
+    print(f"[-] Relative L2 Error (Naive Inversion) : {err_naive:.4e}")
     print(f"[-] Relative L2 Error (Tikhonov L2)     : {err_tik_l2:.4f}")
     print(f"[-] Relative L2 Error (Tikhonov 1st-Ord): {err_tik_d1:.4f}")
     print(f"[-] Relative L2 Error (Total Variation) : {err_tv:.4f}")
     print("=" * 58)
     
-    fig, axs = plt.subplots(2, 2, figsize=(14, 8))
+    # -------------------------------------------------------------
+    # Visual Scaffolding: Flush Origin, No Grids, Publication Grade
+    # -------------------------------------------------------------
+    plt.rcParams['font.sans-serif'] = 'DejaVu Sans'
+    plt.rcParams['axes.edgecolor'] = '#2c3e50'
+    plt.rcParams['axes.linewidth'] = 1.2
     
-    axs[0, 0].plot(x_true, label="Ground Truth Grating x", color="black", linewidth=2)
-    axs[0, 0].plot(y_noisy, label="Noisy Sensor y (Blurred)", color="gray", linestyle="--", alpha=0.8)
-    axs[0, 0].set_title("Optical Acquisition & Forward Degradation")
-    axs[0, 0].legend()
-    axs[0, 0].grid(True, alpha=0.3)
+    fig, axes = plt.subplots(2, 2, figsize=(14, 7), dpi=300)
     
-    axs[0, 1].plot(x_true, label="Ground Truth", color="black", linewidth=1.5, alpha=0.5)
-    axs[0, 1].plot(x_naive, label=f"Naive Inversion (Err: {err_naive:.2f})", color="red", alpha=0.7)
-    axs[0, 1].set_title("Ill-Posed Divergence (Naive Pseudo-Inverse)")
-    axs[0, 1].set_ylim([-2, 3])
-    axs[0, 1].legend()
-    axs[0, 1].grid(True, alpha=0.3)
+    # Panel 1: Optical Forward Degradation
+    ax1 = axes[0, 0]
+    ax1.plot(x_true, color='black', linewidth=2.0, label='Ground Truth Grating x')
+    ax1.plot(y_noisy, color='gray', linestyle='--', linewidth=1.2, label='Noisy Sensor y (Blurred)')
+    ax1.set_title('Optical Acquisition & Forward Degradation', fontsize=11, fontweight='bold')
+    ax1.set_xlim(0, N - 1)
+    ax1.set_ylim(-0.08, 1.12)
+    ax1.grid(False)
+    ax1.legend(loc='center right', frameon=True)
     
-    axs[1, 0].plot(x_true, label="Ground Truth", color="black", linewidth=1.5, alpha=0.5)
-    axs[1, 0].plot(x_tik_l2, label=f"Tikhonov L2 (Err: {err_tik_l2:.2f})", color="blue")
-    axs[1, 0].plot(x_tik_d1, label=f"Tikhonov 1st-Ord (Err: {err_tik_d1:.2f})", color="orange")
-    axs[1, 0].set_title("Classical Regularization (Tikhonov)")
-    axs[1, 0].legend()
-    axs[1, 0].grid(True, alpha=0.3)
+    # Panel 2: Naive Inversion Exploding Under Noise
+    ax2 = axes[0, 1]
+    ax2.plot(x_true, color='black', linewidth=1.2, alpha=0.6, label='Ground Truth')
+    ax2.plot(x_naive, color='#e74c3c', linewidth=0.8, alpha=0.8, label=f'Naive Inversion (Err: {err_naive:.2e})')
+    ax2.set_title('Ill-Posed Divergence (Naive Pseudo-Inverse)', fontsize=11, fontweight='bold')
+    ax2.set_xlim(0, N - 1)
+    ax2.set_ylim(-2.0, 3.0)
+    ax2.grid(False)
+    ax2.legend(loc='upper right', frameon=True)
     
-    axs[1, 1].plot(x_true, label="Ground Truth", color="black", linewidth=2)
-    axs[1, 1].plot(x_tv, label=f"Total Variation Prior (Err: {err_tv:.2f})", color="green", linewidth=2)
-    axs[1, 1].set_title("Physics-Informed Edge-Preserving Reconstruction (TV)")
-    axs[1, 1].legend()
-    axs[1, 1].grid(True, alpha=0.3)
+    # Panel 3: Classical Tikhonov (L2 and 1st-Order Smoothing)
+    ax3 = axes[1, 0]
+    ax3.plot(x_true, color='black', linewidth=1.2, alpha=0.5, label='Ground Truth')
+    ax3.plot(x_tik_l2, color='blue', linewidth=1.5, label=f'Tikhonov L2 (Err: {err_tik_l2:.2f})')
+    ax3.plot(x_tik_d1, color='#f39c12', linewidth=1.5, label=f'Tikhonov 1st-Ord (Err: {err_tik_d1:.2f})')
+    ax3.set_title('Classical Regularization (Tikhonov)', fontsize=11, fontweight='bold')
+    ax3.set_xlim(0, N - 1)
+    ax3.set_ylim(-0.25, 1.35)
+    ax3.grid(False)
+    ax3.legend(loc='upper right', frameon=True)
+    
+    # Panel 4: Physics-Informed Variational Inversion (Total Variation)
+    ax4 = axes[1, 1]
+    ax4.plot(x_true, color='black', linewidth=2.0, label='Ground Truth')
+    ax4.plot(x_tv, color='#1e824c', linewidth=2.0, label=f'Total Variation Prior (Err: {err_tv:.2f})')
+    ax4.set_title('Physics-Informed Edge-Preserving Reconstruction (TV)', fontsize=11, fontweight='bold')
+    ax4.set_xlim(0, N - 1)
+    ax4.set_ylim(-0.05, 1.05)
+    ax4.grid(False)
+    ax4.legend(loc='center right', frameon=True)
     
     plt.tight_layout()
-    plt.savefig("metrology_inversion_benchmark.png", dpi=300)
-    print("[*] Benchmark plot saved to: metrology_inversion_benchmark.png")
+    plt.savefig('metrology_inversion.png', dpi=300, bbox_inches='tight')
+    plt.close()
+    print(" Publication-grade figure saved: metrology_inversion.png")
 
 if __name__ == "__main__":
     main()

@@ -39,4 +39,4 @@ $$\min_{\hat{x}} \frac{1}{2N} |A\hat{x} - y|2^2 + \lambda{\text{TV}} \sum_{i=1}^
 | **Tikhonov (1st-Order)** | $0.2466$ | Suppresses high-frequency ripple |
 | **Total Variation (PyTorch Autograd)** | **$0.1550$** | Sharp edge-preserving recovery |
 
-![Benchmark Output](metrology_inversion_benchmark.png)
+![Benchmark Output](metrology_inversion.png)
