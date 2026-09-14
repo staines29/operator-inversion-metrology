@@ -41,9 +41,9 @@ We evaluate three stabilization schemes against naive unregularized inversion:
    Penalizes first-order differences, introducing ramp artifacts across discontinuous interfaces.
 
 3. **Physics-Informed Variational Inversion (Total Variation Prior):**
-$$
-\min_{\hat{x}} \frac{1}{2N} \| A\hat{x} - y \|_2^2 + \lambda_{\mathrm{TV}} \sum_{i=1}^{N-1} \sqrt{(\hat{x}_{i+1} - \hat{x}_i)^2 + \epsilon} \quad \text{subject to} \quad \hat{x} \in [0, 1]
-$$
+   $$
+   \min_{\hat{x}} \frac{1}{2N} \| A\hat{x} - y \|_2^2 + \lambda_{\mathrm{TV}} \sum_{i=1}^{N-1} \sqrt{(\hat{x}_{i+1} - \hat{x}_i)^2 + \epsilon} \quad \text{subject to} \quad \hat{x} \in [0, 1]
+   $$
    Implemented in PyTorch using autograd optimization (Adam) to enforce piecewise-constant edge preservation.
 
 ### Comparative Inversion Performance
